@@ -1,0 +1,2637 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartHome Energy  - Plateforme de gestion énergétique intelligente">
+  <title>SmartHome Energy  - Gestion Énergétique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================================
+       DESIGN SYSTEM & VARIABLES
+       ======================================== */
+
+    :root {
+      --color-primary: #4f46e5;
+      --color-primary-light: #eef2ff;
+      --color-primary-dark: #312e81;
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-danger: #ef4444;
+      --color-info: #3b82f6;
+      
+      --color-solar: #f59e0b;
+      --color-wind: #10b981;
+      --color-battery: #3b82f6;
+      --color-grid: #8b5cf6;
+      --color-consumption: #ec4899;
+
+      --color-white: #ffffff;
+      --color-bg: #f8fafc;
+      --color-bg-secondary: #f1f5f9;
+      --color-surface: #ffffff;
+      --color-text: #0f172a;
+      --color-text-secondary: #64748b;
+      --color-text-tertiary: #94a3b8;
+      --color-border: #e2e8f0;
+
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 12px;
+      --spacing-lg: 16px;
+      --spacing-xl: 24px;
+      --spacing-2xl: 32px;
+
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-size-xs: 12px;
+      --font-size-sm: 14px;
+      --font-size-base: 16px;
+      --font-size-lg: 18px;
+      --font-size-xl: 20px;
+      --font-size-2xl: 24px;
+      --font-size-3xl: 32px;
+
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+      --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.12);
+      --shadow-lg: 0 4px 16px rgba(15, 23, 42, 0.15);
+
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+      --transition-slow: 300ms ease;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #0f172a;
+        --color-bg-secondary: #1e293b;
+        --color-surface: #1e293b;
+        --color-text: #f1f5f9;
+        --color-text-secondary: #cbd5e1;
+        --color-text-tertiary: #94a3b8;
+        --color-border: #334155;
+      }
+    }
+
+    /* ========================================
+       RESET & BASE STYLES
+       ======================================== */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+      color: var(--color-text);
+      background: linear-gradient(135deg, #e8f0f8 0%, #f0f4ff 50%, #e8ecff 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========================================
+       HEADER & NAVIGATION
+       ======================================== */
+
+    header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar {
+      max-width: 100%;
+      height: 70px;
+      padding: 0 var(--spacing-xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-xl);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .logo {
+      font-size: 32px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      color: white;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-subtitle {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .navbar-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .time-widget {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-md) var(--spacing-lg);
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: center;
+    }
+
+    .time-display {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-primary);
+      text-align: center;
+    }
+
+    .date-display {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      text-align: center;
+      min-width: 80px;
+    }
+
+    .time-date-separator {
+      width: 1px;
+      height: 24px;
+      background: var(--color-border);
+    }
+
+    .profile-btn {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+      border: none;
+      color: white;
+      font-size: var(--font-size-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-md);
+    }
+
+    .profile-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .profile-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: var(--spacing-sm);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      min-width: 200px;
+      z-index: 1001;
+      display: none;
+      overflow: hidden;
+    }
+
+    .profile-menu.show {
+      display: block;
+    }
+
+    .profile-menu-item {
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .profile-menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-menu-item:hover {
+      background: var(--color-bg);
+    }
+
+    .profile-menu-header {
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .profile-input-group {
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .profile-input-group label {
+      display: block;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 600;
+    }
+
+    .profile-input-group input {
+      width: 100%;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+
+    .profile-input-group input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+    }
+
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: var(--color-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-success);
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .status-text {
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+    }
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      font-size: var(--font-size-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .nav-btn:hover {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    /* ========================================
+       MAIN LAYOUT
+       ======================================== */
+
+    .app-main {
+      flex: 1;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: var(--color-surface);
+      border-right: 1px solid var(--color-border);
+      overflow-y: auto;
+      padding: var(--spacing-xl) 0;
+    }
+
+    .nav-section {
+      padding: 0 var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .nav-title {
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--spacing-md);
+      padding: 0 var(--spacing-md);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      position: relative;
+    }
+
+    .nav-item:hover {
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .nav-item.active {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .nav-icon {
+      font-size: var(--font-size-lg);
+      flex-shrink: 0;
+    }
+
+    .content-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-2xl);
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 200ms ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .page-header {
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .page-header h1 {
+      font-size: var(--font-size-3xl);
+      font-weight: 700;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text);
+    }
+
+    .page-header .subtitle {
+      font-size: var(--font-size-base);
+      color: var(--color-text-secondary);
+    }
+
+    /* ========================================
+       CARDS & COMPONENTS
+       ======================================== */
+
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-base);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-title {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-text);
+    }
+
+    /* KPI Grid */
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .kpi-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-lg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition-base);
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+    }
+
+    .kpi-card.solar::before {
+      background: linear-gradient(90deg, var(--color-solar), #fcd34d);
+    }
+
+    .kpi-card.wind::before {
+      background: linear-gradient(90deg, var(--color-wind), #6ee7b7);
+    }
+
+    .kpi-card.battery::before {
+      background: linear-gradient(90deg, var(--color-battery), #60a5fa);
+    }
+
+    .kpi-card.consumption::before {
+      background: linear-gradient(90deg, var(--color-consumption), #f472b6);
+    }
+
+    .kpi-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .kpi-icon {
+      font-size: 48px;
+      margin-bottom: var(--spacing-md);
+      display: block;
+    }
+
+    .kpi-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+      margin-bottom: var(--spacing-md);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .kpi-value {
+      font-size: var(--font-size-3xl);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .kpi-unit {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .kpi-bar {
+      height: 6px;
+      background: var(--color-bg);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .kpi-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+      transition: width 1s ease;
+    }
+
+    .kpi-card.solar .kpi-fill {
+      background: linear-gradient(90deg, var(--color-solar), #fcd34d);
+    }
+
+    .kpi-card.wind .kpi-fill {
+      background: linear-gradient(90deg, var(--color-wind), #6ee7b7);
+    }
+
+    .kpi-card.battery .kpi-fill {
+      background: linear-gradient(90deg, var(--color-battery), #60a5fa);
+    }
+
+    .kpi-card.consumption .kpi-fill {
+      background: linear-gradient(90deg, var(--color-consumption), #f472b6);
+    }
+
+    /* Energy Flow */
+
+    .energy-flow-section {
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .energy-flow {
+      display: grid;
+      grid-template-columns: 1fr 80px 200px 80px 1fr;
+      gap: var(--spacing-lg);
+      align-items: center;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .flow-source {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      text-align: center;
+      transition: all var(--transition-base);
+    }
+
+    .flow-source:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .flow-icon {
+      font-size: 40px;
+      margin-bottom: var(--spacing-md);
+      display: block;
+    }
+
+    .flow-label {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .flow-value {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .flow-status {
+      font-size: var(--font-size-xs);
+      padding: 4px 8px;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .flow-arrows {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .arrow-horizontal {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+    }
+
+    .arrow-label {
+      font-size: var(--font-size-lg);
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .flow-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-lg);
+    }
+
+    .house-box {
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-bg));
+      border: 2px solid var(--color-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .house-icon {
+      font-size: 48px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .house-label {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .consumption-stat {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .stat-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    /* Battery Info */
+
+    .battery-info {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: var(--spacing-xl);
+      padding: var(--spacing-lg);
+      background: var(--color-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .battery-visual {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .battery-level {
+      width: 40px;
+      height: 80px;
+      background: var(--color-bg);
+      border: 2px solid var(--color-battery);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .battery-level::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, var(--color-battery), #60a5fa);
+      transform: translateY(calc(100% - var(--height, 80%)));
+      transition: transform 1s ease;
+    }
+
+    .battery-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-md) 0;
+      border-bottom: 1px solid var(--color-border);
+      font-weight: 500;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-row .value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    /* Charts */
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .chart-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Sources Grid */
+
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .resource-card {
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-lg);
+      transition: all var(--transition-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .resource-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+    }
+
+    .resource-card.solar::before {
+      background: linear-gradient(90deg, var(--color-solar), #fcd34d);
+    }
+
+    .resource-card.wind::before {
+      background: linear-gradient(90deg, var(--color-wind), #6ee7b7);
+    }
+
+    .resource-card.battery::before {
+      background: linear-gradient(90deg, var(--color-battery), #60a5fa);
+    }
+
+    .resource-card.grid::before {
+      background: linear-gradient(90deg, var(--color-grid), #a78bfa);
+    }
+
+    .resource-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+      border-color: var(--color-primary);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .resource-icon {
+      font-size: 32px;
+    }
+
+    .resource-title {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .toggle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .toggle-btn.on {
+      background: var(--color-success);
+      border-color: var(--color-success);
+      color: white;
+    }
+
+    .toggle-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .metric-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .metric-value {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--color-bg);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+      transition: width 1s ease;
+    }
+
+    .progress-fill.solar {
+      background: linear-gradient(90deg, var(--color-solar), #fcd34d);
+    }
+
+    .progress-fill.wind {
+      background: linear-gradient(90deg, var(--color-wind), #6ee7b7);
+    }
+
+    .progress-fill.battery {
+      background: linear-gradient(90deg, var(--color-battery), #60a5fa);
+    }
+
+    .progress-fill.grid {
+      background: linear-gradient(90deg, var(--color-grid), #a78bfa);
+    }
+
+    .progress-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      text-align: right;
+    }
+
+    /* Charges Grid */
+
+    .charges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .charge-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-base);
+    }
+
+    .charge-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--color-primary);
+    }
+
+    .charge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .charge-icon {
+      font-size: 28px;
+      display: block;
+      margin-right: var(--spacing-md);
+    }
+
+    .charge-info {
+      flex: 1;
+    }
+
+    .charge-name {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .charge-nominal {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    .charge-toggle {
+      width: 56px;
+      height: 28px;
+      border-radius: 9999px;
+      border: 2px solid var(--color-border);
+      background: var(--color-bg);
+      cursor: pointer;
+      position: relative;
+      transition: all var(--transition-base);
+    }
+
+    .charge-toggle.on {
+      background: var(--color-success);
+      border-color: var(--color-success);
+    }
+
+    .toggle-indicator {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      transition: left var(--transition-base);
+    }
+
+    .charge-toggle.on .toggle-indicator {
+      left: 26px;
+    }
+
+    .charge-status {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-danger);
+    }
+
+    .charge-status.on .status-dot {
+      background: var(--color-success);
+      animation: pulse 2s infinite;
+    }
+
+    .status-label {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-danger);
+    }
+
+    .charge-status.on .status-label {
+      color: var(--color-success);
+    }
+
+    .charge-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      font-size: var(--font-size-sm);
+    }
+
+    .metric-row .metric-label {
+      color: var(--color-text-secondary);
+      font-weight: 600;
+    }
+
+    .metric-row .metric-value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .charge-bar {
+      height: 8px;
+      background: var(--color-bg);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: var(--spacing-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .charge-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-warning), var(--color-danger));
+      transition: width 1s ease;
+      border-radius: 9999px;
+    }
+
+    .charge-action-btn {
+      width: 100%;
+      padding: var(--spacing-md);
+      background: var(--color-primary);
+      color: white;
+      border-radius: var(--radius-md);
+      border: none;
+      font-weight: 600;
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .charge-action-btn:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Settings */
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .setting-item {
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .setting-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .setting-item label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text);
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .input-group input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 9999px;
+      background: var(--color-bg);
+      outline: none;
+      cursor: pointer;
+      accent-color: var(--color-primary);
+    }
+
+    .value-display {
+      min-width: 50px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .priority-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .priority-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      border: 2px solid var(--color-border);
+      cursor: grab;
+      transition: all var(--transition-base);
+      user-select: none;
+      draggable: true;
+    }
+
+    .priority-item:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+    }
+
+    .priority-item.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .priority-item.drag-over {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+
+    .priority-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: var(--color-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: var(--font-size-sm);
+      flex-shrink: 0;
+    }
+
+    .priority-name {
+      font-weight: 600;
+      color: var(--color-text);
+      flex: 1;
+    }
+
+    .priority-drag-handle {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+      cursor: grab;
+    }
+
+    /* Alerts */
+
+    .alerts-container {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .alert-filters {
+      display: flex;
+      gap: var(--spacing-md);
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: var(--spacing-sm) var(--spacing-lg);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .filter-btn:hover {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    .filter-btn.active {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    .alerts-list {
+      padding: var(--spacing-lg);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .alert-item {
+      display: flex;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+      background: var(--color-bg);
+      border-left: 4px solid var(--color-info);
+    }
+
+    .alert-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .alert-item.success {
+      background: rgba(16, 185, 129, 0.1);
+      border-left-color: var(--color-success);
+    }
+
+    .alert-item.warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-left-color: var(--color-warning);
+    }
+
+    .alert-item.error {
+      background: rgba(239, 68, 68, 0.1);
+      border-left-color: var(--color-danger);
+    }
+
+    .alert-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .alert-content {
+      flex: 1;
+    }
+
+    .alert-title {
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .alert-time {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    /* Footer */
+
+    footer {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding: var(--spacing-lg) var(--spacing-xl);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: var(--spacing-lg);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    .footer-left,
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .footer-right {
+      justify-content: flex-end;
+    }
+
+    .footer-center {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-device {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-xs) var(--spacing-md);
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .footer-device-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-danger);
+    }
+
+    .footer-device-dot.online {
+      background: var(--color-success);
+      box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+    }
+
+    /* Responsive */
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .energy-flow {
+        grid-template-columns: 1fr 100px 1fr;
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sources-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .charges-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .sidebar {
+        display: none;
+      }
+
+      .navbar {
+        flex-direction: column;
+        height: auto;
+        padding: var(--spacing-md);
+        gap: var(--spacing-md);
+      }
+
+      .navbar-brand {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .navbar-center {
+        width: 100%;
+      }
+
+      .navbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+      }
+
+      .brand-text {
+        display: none;
+      }
+
+      .content-wrapper {
+        padding: var(--spacing-lg);
+      }
+
+      .page-header h1 {
+        font-size: var(--font-size-2xl);
+      }
+
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .energy-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .battery-info {
+        grid-template-columns: 1fr;
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sources-grid,
+      .charges-grid,
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      footer {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+
+      .footer-left,
+      .footer-right,
+      .footer-center {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <div class="logo">⚡</div>
+        <div class="brand-text">
+          <div class="brand-title">SmartHome Energy</div>
+          <div class="brand-subtitle">Pro v3.0</div>
+        </div>
+      </div>
+
+      <div class="navbar-center">
+        <div class="time-widget">
+          <div class="time-display" id="timeDisplay">--:--:--</div>
+          <div class="time-date-separator"></div>
+          <div class="date-display" id="dateDisplay">--/--/----</div>
+        </div>
+      </div>
+
+      <div class="navbar-right">
+        <div class="system-status">
+          <div class="status-indicator"></div>
+          <span class="status-text">Système connecté</span>
+        </div>
+        <div style="position: relative;">
+          <button class="profile-btn" onclick="app.toggleProfileMenu()" title="Profil">👤</button>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-menu-header">Mon Profil</div>
+            <div class="profile-input-group">
+              <label>Nom</label>
+              <input type="text" id="profileName" placeholder="Votre nom" value="Utilisateur">
+            </div>
+            <div class="profile-input-group">
+              <label>Mot de passe</label>
+              <input type="password" id="profilePassword" placeholder="Mot de passe">
+            </div>
+            <div class="profile-menu-item" onclick="app.saveProfile()">💾 Enregistrer</div>
+            <div class="profile-menu-item" onclick="app.closeProfileMenu()">✕ Fermer</div>
+          </div>
+        </div>
+        <button class="nav-btn" onclick="app.toggleFullscreen()" title="Plein écran">⛶</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <div class="app-main">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="nav-section">
+        <div class="nav-title">Menu</div>
+        <div class="nav-item active" onclick="app.navigatePage('dashboard')">
+          <span class="nav-icon">📊</span> Tableau de Bord
+        </div>
+        <div class="nav-item" onclick="app.navigatePage('sources')">
+          <span class="nav-icon">⚡</span> Sources
+        </div>
+        <div class="nav-item" onclick="app.navigatePage('charges')">
+          <span class="nav-icon">🔌</span> Charges
+        </div>
+        <div class="nav-item" onclick="app.navigatePage('analytics')">
+          <span class="nav-icon">📈</span> Analyse
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-title">Config</div>
+        <div class="nav-item" onclick="app.navigatePage('settings')">
+          <span class="nav-icon">⚙️</span> Paramètres
+        </div>
+        <div class="nav-item" onclick="app.navigatePage('alerts')">
+          <span class="nav-icon">🔔</span> Alertes
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="content-wrapper">
+
+      <!-- DASHBOARD PAGE -->
+      <section id="page-dashboard" class="page active">
+        <div class="page-header">
+          <h1>Tableau de Bord</h1>
+          <p class="subtitle">Supervision en temps réel de votre système microgrid</p>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card solar">
+            <div class="kpi-icon">☀️</div>
+            <div class="kpi-label">Production Solaire</div>
+            <div class="kpi-value" id="kpi-solar">2.5</div>
+            <div class="kpi-unit">kW</div>
+            <div class="kpi-bar">
+              <div class="kpi-fill" id="kpi-solar-bar" style="width: 83%"></div>
+            </div>
+          </div>
+
+          <div class="kpi-card wind">
+            <div class="kpi-icon">🌀</div>
+            <div class="kpi-label">Production Éolienne</div>
+            <div class="kpi-value" id="kpi-wind">1.2</div>
+            <div class="kpi-unit">kW</div>
+            <div class="kpi-bar">
+              <div class="kpi-fill" id="kpi-wind-bar" style="width: 60%"></div>
+            </div>
+          </div>
+
+          <div class="kpi-card battery">
+            <div class="kpi-icon">🔋</div>
+            <div class="kpi-label">État Batterie</div>
+            <div class="kpi-value" id="kpi-battery">68</div>
+            <div class="kpi-unit">%</div>
+            <div class="kpi-bar">
+              <div class="kpi-fill" id="kpi-battery-bar" style="width: 68%"></div>
+            </div>
+          </div>
+
+          <div class="kpi-card consumption">
+            <div class="kpi-icon">📍</div>
+            <div class="kpi-label">Consommation</div>
+            <div class="kpi-value" id="kpi-consumption">3.7</div>
+            <div class="kpi-unit">kW</div>
+            <div class="kpi-bar">
+              <div class="kpi-fill" id="kpi-consumption-bar" style="width: 74%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Consommation Totale -->
+        <div class="card" style="background: linear-gradient(135deg, var(--color-consumption), #d1245a); color: white; margin-bottom: var(--spacing-xl);">
+          <h2 class="card-title" style="color: white;">🔌 Consommation Totale</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl);">
+            <div style="text-align: center;">
+              <div style="font-size: var(--font-size-3xl); font-weight: 800; margin-bottom: var(--spacing-sm);">4.2</div>
+              <div style="font-size: var(--font-size-sm); opacity: 0.9;">kW</div>
+              <div style="font-size: var(--font-size-xs); margin-top: var(--spacing-md); opacity: 0.8;">ESP32 #4 — Compteur général</div>
+              <div style="font-size: var(--font-size-xs); opacity: 0.8;">Maison complète (inclus éclairage + autres charges)</div>
+            </div>
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+              <div style="margin-bottom: var(--spacing-lg);">
+                <div style="font-size: var(--font-size-sm); opacity: 0.9; margin-bottom: var(--spacing-xs);">Aujourd'hui</div>
+                <div style="font-size: var(--font-size-2xl); font-weight: 700;">23.5 kWh</div>
+              </div>
+              <div>
+                <div style="font-size: var(--font-size-sm); opacity: 0.9; margin-bottom: var(--spacing-xs);">Ce mois</div>
+                <div style="font-size: var(--font-size-2xl); font-weight: 700;">487.2 kWh</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card energy-flow-section">
+          <h2 class="card-title">Flux Énergétique</h2>
+          <div class="energy-flow">
+            <div class="flow-source">
+              <div class="flow-icon">☀️</div>
+              <div class="flow-label">Panneaux</div>
+              <div class="flow-value" id="flow-solar-val">2.5 kW</div>
+              <div class="flow-status">● Actif</div>
+            </div>
+
+            <div class="flow-arrows">
+              <div class="arrow-horizontal"></div>
+              <div class="arrow-label">→</div>
+            </div>
+
+            <div class="flow-center">
+              <div class="house-box">
+                <div class="house-icon">🏠</div>
+                <div class="house-label">Maison</div>
+                <div class="consumption-stat">
+                  <span class="stat-label">Consommation</span>
+                  <span class="stat-value" id="house-consumption">3.7 kW</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-arrows">
+              <div class="arrow-label">→</div>
+              <div class="arrow-horizontal"></div>
+            </div>
+
+            <div class="flow-source">
+              <div class="flow-icon">🌀</div>
+              <div class="flow-label">Éolienne</div>
+              <div class="flow-value" id="flow-wind-val">1.2 kW</div>
+              <div class="flow-status">● Actif</div>
+            </div>
+          </div>
+
+          <div class="battery-info">
+            <div class="battery-visual">
+              <div class="battery-level" id="battery-level" style="--height: 68%">
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, var(--color-battery), #60a5fa); transform: translateY(calc(100% - 68%))"></div>
+              </div>
+            </div>
+            <div class="battery-details">
+              <div class="detail-row">
+                <span>🔋 Batterie</span>
+                <span class="value" id="battery-soc">68%</span>
+              </div>
+              <div class="detail-row">
+                <span>🚗 Voiture (EV)</span>
+                <span class="value" id="ev-soc">68%</span>
+              </div>
+              <div class="detail-row">
+                <span>⚡ Statut</span>
+                <span class="value" style="color: var(--color-success);">En charge</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+          <div class="card">
+            <h2 class="card-title">Production 24h</h2>
+            <canvas id="productionChart" height="300"></canvas>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">Répartition Charges</h2>
+            <div class="chart-container">
+              <canvas id="distributionChart" width="280" height="280"></canvas>
+              <div style="position: absolute; display: flex; flex-direction: column; align-items: center;">
+                <div style="font-size: 24px; font-weight: 700; color: var(--color-text);">5.2</div>
+                <div style="font-size: 12px; color: var(--color-text-secondary);">kW</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOURCES PAGE -->
+      <section id="page-sources" class="page">
+        <div class="page-header">
+          <h1>Sources d'Énergie</h1>
+          <p class="subtitle">Gestion des sources de production énergétique</p>
+        </div>
+
+        <div class="sources-grid">
+          <!-- Solar -->
+          <div class="resource-card solar">
+            <div class="card-header">
+              <div class="header-left">
+                <div class="resource-icon">☀️</div>
+                <div class="resource-title">Panneaux Solaires</div>
+              </div>
+              <button class="toggle-btn on" onclick="app.toggleSource(this, 'solar')">●</button>
+            </div>
+
+            <div class="metrics-grid">
+              <div class="metric">
+                <span class="metric-label">Puissance</span>
+                <span class="metric-value" id="solar-power">2.5 kW</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Tension</span>
+                <span class="metric-value" id="solar-voltage">400 V</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Courant</span>
+                <span class="metric-value" id="solar-current">6.3 A</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Facteur Puissance</span>
+                <span class="metric-value" id="solar-pf">0.98</span>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill solar" id="solar-progress" style="width: 83%"></div>
+            </div>
+            <div class="progress-label">Efficacité: 83%</div>
+          </div>
+
+          <!-- Wind -->
+          <div class="resource-card wind">
+            <div class="card-header">
+              <div class="header-left">
+                <div class="resource-icon">🌀</div>
+                <div class="resource-title">Éolienne</div>
+              </div>
+              <button class="toggle-btn on" onclick="app.toggleSource(this, 'wind')">●</button>
+            </div>
+
+            <div class="metrics-grid">
+              <div class="metric">
+                <span class="metric-label">Puissance</span>
+                <span class="metric-value" id="wind-power">1.2 kW</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Tension</span>
+                <span class="metric-value" id="wind-voltage">398 V</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Courant</span>
+                <span class="metric-value" id="wind-current">3.0 A</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Facteur Puissance</span>
+                <span class="metric-value" id="wind-pf">0.96</span>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill wind" id="wind-progress" style="width: 60%"></div>
+            </div>
+            <div class="progress-label">Capacité: 60%</div>
+          </div>
+
+          <!-- Battery -->
+          <div class="resource-card battery">
+            <div class="card-header">
+              <div class="header-left">
+                <div class="resource-icon">🔋</div>
+                <div class="resource-title">Batterie</div>
+              </div>
+              <button class="toggle-btn on" onclick="app.toggleSource(this, 'battery')">●</button>
+            </div>
+
+            <div class="metrics-grid">
+              <div class="metric">
+                <span class="metric-label">État Charge</span>
+                <span class="metric-value" id="battery-soc-val">68 %</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Tension</span>
+                <span class="metric-value" id="battery-voltage">384 V</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Courant</span>
+                <span class="metric-value" id="battery-current">2.1 A</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Puissance</span>
+                <span class="metric-value" id="battery-power">0.5 kW</span>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill battery" id="battery-progress" style="width: 68%"></div>
+            </div>
+            <div class="progress-label">Charge: 68%</div>
+          </div>
+
+          <!-- Grid -->
+          <div class="resource-card grid">
+            <div class="card-header">
+              <div class="header-left">
+                <div class="resource-icon">🔌</div>
+                <div class="resource-title">Réseau Public</div>
+              </div>
+              <button class="toggle-btn on" onclick="app.toggleSource(this, 'grid')">●</button>
+            </div>
+
+            <div class="metrics-grid">
+              <div class="metric">
+                <span class="metric-label">Statut</span>
+                <span class="metric-value" style="color: var(--color-success);">Connecté</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Tension</span>
+                <span class="metric-value" id="grid-voltage">230 V</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Fréquence</span>
+                <span class="metric-value" id="grid-frequency">50 Hz</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Puissance</span>
+                <span class="metric-value" id="grid-power">— kW</span>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill grid" id="grid-progress" style="width: 0%"></div>
+            </div>
+            <div class="progress-label">Importation: 0%</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHARGES PAGE -->
+      <section id="page-charges" class="page">
+        <div class="page-header">
+          <h1>Charges Flexibles</h1>
+          <p class="subtitle">Gestion et monitoring des consommateurs</p>
+        </div>
+
+        <div class="charges-grid">
+          <!-- Washing Machine -->
+          <div class="charge-card">
+            <div class="charge-header">
+              <div class="header-left">
+                <div class="charge-icon">🌀</div>
+                <div class="charge-info">
+                  <div class="charge-name">Machine à Laver</div>
+                  <div class="charge-nominal">2.0 kW</div>
+                </div>
+              </div>
+              <button class="charge-toggle off" onclick="app.toggleCharge(this, 'washing')">
+                <span class="toggle-indicator"></span>
+              </button>
+            </div>
+
+            <div class="charge-status off">
+              <span class="status-dot"></span>
+              <span class="status-label">Arrêtée</span>
+            </div>
+
+            <div class="charge-metrics">
+              <div class="metric-row">
+                <span class="metric-label">Puissance</span>
+                <span class="metric-value" id="washing-power">0.0 W</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Voltage</span>
+                <span class="metric-value" id="washing-voltage">— V</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Courant</span>
+                <span class="metric-value" id="washing-current">— A</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Énergie</span>
+                <span class="metric-value" id="washing-energy">— kWh</span>
+              </div>
+            </div>
+
+            <div class="charge-bar">
+              <div class="charge-bar-fill" id="washing-bar"></div>
+            </div>
+
+            <button class="charge-action-btn" onclick="app.toggleChargeState(this, 'washing')">Allumer</button>
+          </div>
+
+          <!-- AC -->
+          <div class="charge-card">
+            <div class="charge-header">
+              <div class="header-left">
+                <div class="charge-icon">❄️</div>
+                <div class="charge-info">
+                  <div class="charge-name">Climatisation</div>
+                  <div class="charge-nominal">1.5 kW</div>
+                </div>
+              </div>
+              <button class="charge-toggle on" onclick="app.toggleCharge(this, 'ac')">
+                <span class="toggle-indicator"></span>
+              </button>
+            </div>
+
+            <div class="charge-status on">
+              <span class="status-dot"></span>
+              <span class="status-label">En fonctionnement</span>
+            </div>
+
+            <div class="charge-metrics">
+              <div class="metric-row">
+                <span class="metric-label">Puissance</span>
+                <span class="metric-value" id="ac-power">1.5 kW</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Voltage</span>
+                <span class="metric-value" id="ac-voltage">230 V</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Courant</span>
+                <span class="metric-value" id="ac-current">6.5 A</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Énergie</span>
+                <span class="metric-value" id="ac-energy">4.2 kWh</span>
+              </div>
+            </div>
+
+            <div class="charge-bar">
+              <div class="charge-bar-fill" id="ac-bar" style="width: 75%; background: linear-gradient(90deg, #06b6d4, #22d3ee);"></div>
+            </div>
+
+            <button class="charge-action-btn" onclick="app.toggleChargeState(this, 'ac')">Éteindre</button>
+          </div>
+
+          <!-- Heating -->
+          <div class="charge-card">
+            <div class="charge-header">
+              <div class="header-left">
+                <div class="charge-icon">🔥</div>
+                <div class="charge-info">
+                  <div class="charge-name">Chauffage</div>
+                  <div class="charge-nominal">2.5 kW</div>
+                </div>
+              </div>
+              <button class="charge-toggle off" onclick="app.toggleCharge(this, 'heat')">
+                <span class="toggle-indicator"></span>
+              </button>
+            </div>
+
+            <div class="charge-status off">
+              <span class="status-dot"></span>
+              <span class="status-label">Arrêté</span>
+            </div>
+
+            <div class="charge-metrics">
+              <div class="metric-row">
+                <span class="metric-label">Puissance</span>
+                <span class="metric-value" id="heat-power">0.0 W</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Voltage</span>
+                <span class="metric-value" id="heat-voltage">— V</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Courant</span>
+                <span class="metric-value" id="heat-current">— A</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Énergie</span>
+                <span class="metric-value" id="heat-energy">— kWh</span>
+              </div>
+            </div>
+
+            <div class="charge-bar">
+              <div class="charge-bar-fill" id="heat-bar"></div>
+            </div>
+
+            <button class="charge-action-btn" onclick="app.toggleChargeState(this, 'heat')">Allumer</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS PAGE -->
+      <section id="page-analytics" class="page">
+        <div class="page-header">
+          <h1>Analyse & Rapports</h1>
+          <p class="subtitle">Données historiques et tendances</p>
+        </div>
+
+        <div class="charts-grid" style="grid-template-columns: 1fr;">
+          <div class="card">
+            <h2 class="card-title">Consommation Quotidienne</h2>
+            <canvas id="dailyChart" height="320"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS PAGE -->
+      <section id="page-settings" class="page">
+        <div class="page-header">
+          <h1>Paramètres & Configuration</h1>
+          <p class="subtitle">Personnalisez votre système</p>
+        </div>
+
+        <div class="settings-grid">
+          <div class="card">
+            <h3 class="card-title">⚙️ Batterie</h3>
+            <div class="setting-item">
+              <label>SOC Minimum (%)</label>
+              <div class="input-group">
+                <input type="range" min="10" max="80" value="30" id="socMin" onchange="app.updateSocMin(this)">
+                <span class="value-display" id="socMinVal">30%</span>
+              </div>
+            </div>
+            <div class="setting-item">
+              <label>SOC Maximum (%)</label>
+              <div class="input-group">
+                <input type="range" min="70" max="100" value="90" id="socMax" onchange="app.updateSocMax(this)">
+                <span class="value-display" id="socMaxVal">90%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">🎯 Priorités</h3>
+            <div class="priority-list" id="priorityList">
+              <div class="priority-item" draggable="true" data-priority="solar">
+                <div class="priority-drag-handle">⋮⋮</div>
+                <div class="priority-badge" style="background: var(--color-solar);">1</div>
+                <span class="priority-name">☀️ Solaire</span>
+              </div>
+              <div class="priority-item" draggable="true" data-priority="battery">
+                <div class="priority-drag-handle">⋮⋮</div>
+                <div class="priority-badge" style="background: var(--color-battery);">2</div>
+                <span class="priority-name">🔋 Batterie</span>
+              </div>
+              <div class="priority-item" draggable="true" data-priority="wind">
+                <div class="priority-drag-handle">⋮⋮</div>
+                <div class="priority-badge" style="background: var(--color-wind);">3</div>
+                <span class="priority-name">🌀 Éolienne</span>
+              </div>
+              <div class="priority-item" draggable="true" data-priority="grid">
+                <div class="priority-drag-handle">⋮⋮</div>
+                <div class="priority-badge" style="background: var(--color-grid);">4</div>
+                <span class="priority-name">🔌 Réseau</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">🔔 Notifications</h3>
+            <div class="setting-item">
+              <label>Alertes Batterie Faible</label>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Actif</span>
+                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--color-primary);">✓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ALERTS PAGE -->
+      <section id="page-alerts" class="page">
+        <div class="page-header">
+          <h1>Alertes & Notifications</h1>
+          <p class="subtitle">Historique des événements système</p>
+        </div>
+
+        <div class="alerts-container">
+          <div class="alert-filters">
+            <button class="filter-btn active" onclick="app.filterAlerts(this, 'all')">Tous</button>
+            <button class="filter-btn" onclick="app.filterAlerts(this, 'error')">Erreurs</button>
+            <button class="filter-btn" onclick="app.filterAlerts(this, 'warning')">Avertissements</button>
+            <button class="filter-btn" onclick="app.filterAlerts(this, 'info')">Infos</button>
+          </div>
+
+          <div class="alerts-list" id="alertsList">
+            <div class="alert-item success">
+              <div class="alert-icon">✅</div>
+              <div class="alert-content">
+                <div class="alert-title">Tous les systèmes opérationnels</div>
+                <div class="alert-time">Il y a 5 min</div>
+              </div>
+            </div>
+
+            <div class="alert-item info">
+              <div class="alert-icon">ℹ️</div>
+              <div class="alert-content">
+                <div class="alert-title">Production solaire optimale: 2.5 kW</div>
+                <div class="alert-time">Il y a 12 min</div>
+              </div>
+            </div>
+
+            <div class="alert-item warning">
+              <div class="alert-icon">⚠️</div>
+              <div class="alert-content">
+                <div class="alert-title">Batterie en charge optimale (68% → 90%)</div>
+                <div class="alert-time">Il y a 23 min</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <span>SmartHome Energy Pro v3.0</span>
+      <span style="color: var(--color-border);">•</span>
+      <span>© 2024</span>
+    </div>
+    <div class="footer-center" id="deviceStatus">
+      <!-- Devices will be here -->
+    </div>
+    <div class="footer-right" id="footerTime">--:--:--</div>
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // Application State
+    const AppState = {
+      sources: {
+        solar: { power: 2.5, voltage: 400, current: 6.3, pf: 0.98, frequency: 50, efficiency: 83 },
+        wind: { power: 1.2, voltage: 398, current: 3.0, pf: 0.96, frequency: 50, efficiency: 60 },
+        battery: { soc: 68, voltage: 384, current: 2.1, power: 0.5, charging: true },
+        grid: { voltage: 230, frequency: 50, power: 0, status: 'connected' }
+      },
+      charges: {
+        washing: { power: 0, voltage: 0, current: 0, energy: 0, active: false, nominal: 2000 },
+        ac: { power: 1500, voltage: 230, current: 6.5, energy: 4.2, active: true, nominal: 1500 },
+        heat: { power: 0, voltage: 0, current: 0, energy: 0, active: false, nominal: 2500 }
+      },
+      consumption: 3.7,
+      evSoc: 68
+    };
+
+    const app = {
+      init() {
+        this.updateClock();
+        this.renderDashboard();
+        this.initCharts();
+        this.startLiveUpdates();
+        this.updateDeviceStatus();
+        this.initPriorityDragDrop();
+      },
+
+      navigatePage(pageName) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(`page-${pageName}`).classList.add('active');
+
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        event.target.closest('.nav-item')?.classList.add('active');
+      },
+
+      toggleTheme() {
+        document.documentElement.style.colorScheme = 
+          document.documentElement.style.colorScheme === 'dark' ? 'light' : 'dark';
+      },
+
+      toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen();
+        }
+      },
+
+      toggleSource(btn, source) {
+        btn.classList.toggle('on');
+      },
+
+      toggleCharge(btn, charge) {
+        btn.classList.toggle('on');
+        const card = btn.closest('.charge-card');
+        const status = card.querySelector('.charge-status');
+        const statusDot = status.querySelector('.status-dot');
+        const statusLabel = status.querySelector('.status-label');
+
+        if (btn.classList.contains('on')) {
+          status.classList.add('on');
+          statusDot.style.animation = 'pulse 2s infinite';
+          statusLabel.textContent = 'En fonctionnement';
+        } else {
+          status.classList.remove('on');
+          statusDot.style.animation = 'none';
+          statusLabel.textContent = charge === 'washing' ? 'Arrêtée' : 'Arrêt';
+        }
+      },
+
+      toggleChargeState(btn, charge) {
+        const isOn = btn.textContent === 'Éteindre';
+        btn.textContent = isOn ? 'Allumer' : 'Éteindre';
+        
+        const card = btn.closest('.charge-card');
+        const toggle = card.querySelector('.charge-toggle');
+        if (isOn) {
+          toggle.classList.remove('on');
+        } else {
+          toggle.classList.add('on');
+        }
+        this.toggleCharge(toggle, charge);
+      },
+
+      updateSocMin(input) {
+        document.getElementById('socMinVal').textContent = input.value + '%';
+      },
+
+      updateSocMax(input) {
+        document.getElementById('socMaxVal').textContent = input.value + '%';
+      },
+
+      filterAlerts(btn, filter) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      },
+
+      updateClock() {
+        const update = () => {
+          const now = new Date();
+          const h = String(now.getHours()).padStart(2, '0');
+          const m = String(now.getMinutes()).padStart(2, '0');
+          const s = String(now.getSeconds()).padStart(2, '0');
+          
+          document.getElementById('timeDisplay').textContent = `${h}:${m}:${s}`;
+          document.getElementById('footerTime').textContent = `${h}:${m}:${s}`;
+
+          const opts = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+          document.getElementById('dateDisplay').textContent = now.toLocaleDateString('fr-FR', opts);
+        };
+
+        update();
+        setInterval(update, 1000);
+      },
+
+      renderDashboard() {
+        // KPIs
+        document.getElementById('kpi-solar').textContent = AppState.sources.solar.power.toFixed(1);
+        document.getElementById('kpi-wind').textContent = AppState.sources.wind.power.toFixed(1);
+        document.getElementById('kpi-battery').textContent = AppState.sources.battery.soc;
+        document.getElementById('kpi-consumption').textContent = AppState.consumption.toFixed(1);
+
+        // Flow
+        document.getElementById('flow-solar-val').textContent = AppState.sources.solar.power.toFixed(1) + ' kW';
+        document.getElementById('flow-wind-val').textContent = AppState.sources.wind.power.toFixed(1) + ' kW';
+        document.getElementById('house-consumption').textContent = AppState.consumption.toFixed(1) + ' kW';
+
+        // Resources
+        document.getElementById('solar-power').textContent = AppState.sources.solar.power.toFixed(1) + ' kW';
+        document.getElementById('wind-power').textContent = AppState.sources.wind.power.toFixed(1) + ' kW';
+        document.getElementById('battery-soc-val').textContent = AppState.sources.battery.soc + ' %';
+
+        // Battery
+        document.getElementById('battery-soc').textContent = AppState.sources.battery.soc + '%';
+        document.getElementById('ev-soc').textContent = AppState.evSoc + '%';
+
+        // Devices
+        this.updateDeviceStatus();
+      },
+
+      updateDeviceStatus() {
+        const devices = ['ESP32 #1', 'ESP32 #2', 'ESP32 #3', 'ESP32 #4'];
+        document.getElementById('deviceStatus').innerHTML = devices.map(d => `
+          <div class="footer-device">
+            <div class="footer-device-dot online"></div>
+            <span>${d}</span>
+          </div>
+        `).join('');
+      },
+
+      initCharts() {
+        this.drawProductionChart();
+        this.drawDistributionChart();
+        this.drawDailyChart();
+      },
+
+      drawProductionChart() {
+        const canvas = document.getElementById('productionChart');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const width = canvas.parentElement.offsetWidth;
+        const height = 300;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+
+        const hours = ['0h', '2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h'];
+        const solarData = hours.map((_, i) => {
+          const peak = Math.sin((i - 6) * Math.PI / 12) * 2.5;
+          return Math.max(0, peak + (Math.random() - 0.5) * 0.3);
+        });
+
+        const padding = { top: 20, right: 20, bottom: 30, left: 50 };
+        const graphWidth = width - padding.left - padding.right;
+        const graphHeight = height - padding.top - padding.bottom;
+        const maxValue = 4;
+
+        // Background
+        ctx.fillStyle = 'rgba(248, 250, 252, 0.5)';
+        ctx.fillRect(0, 0, width, height);
+
+        // Grid
+        ctx.strokeStyle = 'rgba(226, 232, 240, 0.5)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+          const y = padding.top + (i / 4) * graphHeight;
+          ctx.beginPath();
+          ctx.moveTo(padding.left, y);
+          ctx.lineTo(width - padding.right, y);
+          ctx.stroke();
+        }
+
+        // Solar line
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        solarData.forEach((val, i) => {
+          const x = padding.left + (i / (solarData.length - 1)) * graphWidth;
+          const y = padding.top + graphHeight - (val / maxValue) * graphHeight;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        // Axes
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, padding.top);
+        ctx.lineTo(padding.left, height - padding.bottom);
+        ctx.lineTo(width - padding.right, height - padding.bottom);
+        ctx.stroke();
+      },
+
+      drawDistributionChart() {
+        const canvas = document.getElementById('distributionChart');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = 280 * dpr;
+        canvas.height = 280 * dpr;
+        ctx.scale(dpr, dpr);
+
+        const segments = [
+          { val: 0, color: '#f59e0b' },
+          { val: 1.5, color: '#06b6d4' },
+          { val: 0, color: '#f97316' },
+          { val: 3.7, color: '#4f46e5' }
+        ];
+        const total = segments.reduce((s, seg) => s + seg.val, 0);
+
+        const cx = 140, cy = 140, R = 100, r = 60;
+        let angle = -Math.PI / 2;
+
+        segments.forEach(seg => {
+          if (seg.val === 0) return;
+          const sweep = (seg.val / total) * 2 * Math.PI;
+          ctx.beginPath();
+          ctx.moveTo(cx + R * Math.cos(angle), cy + R * Math.sin(angle));
+          ctx.arc(cx, cy, R, angle, angle + sweep);
+          ctx.arc(cx, cy, r, angle + sweep, angle, true);
+          ctx.closePath();
+          ctx.fillStyle = seg.color;
+          ctx.fill();
+          angle += sweep;
+        });
+
+        // Inner
+        ctx.beginPath();
+        ctx.arc(cx, cy, r - 2, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+      },
+
+      drawDailyChart() {
+        const canvas = document.getElementById('dailyChart');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const width = canvas.parentElement.offsetWidth;
+        const height = 320;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+
+        const data = Array.from({length: 24}, () => 2 + Math.random() * 2);
+        const padding = { top: 20, right: 20, bottom: 30, left: 50 };
+        const graphWidth = width - padding.left - padding.right;
+        const graphHeight = height - padding.top - padding.bottom;
+        const barWidth = (graphWidth / data.length) * 0.6;
+        const barGap = (graphWidth / data.length) * 0.2;
+
+        // Background
+        ctx.fillStyle = 'rgba(248, 250, 252, 0.5)';
+        ctx.fillRect(0, 0, width, height);
+
+        // Bars
+        ctx.fillStyle = '#4f46e5';
+        data.forEach((val, i) => {
+          const barX = padding.left + (i * (barWidth + barGap)) + barGap / 2;
+          const barH = (val / 4) * graphHeight;
+          const barY = padding.top + graphHeight - barH;
+          ctx.fillRect(barX, barY, barWidth, barH);
+        });
+      },
+
+      startLiveUpdates() {
+        setInterval(() => {
+          // Battery
+          AppState.sources.battery.soc = Math.min(100, AppState.sources.battery.soc + 0.5);
+          
+          // EV
+          AppState.evSoc = Math.min(100, AppState.evSoc + 0.3);
+          
+          // Solar variation
+          const solarVar = 2.5 + Math.sin(Date.now() / 5000) * 0.5;
+          AppState.sources.solar.power = Math.max(0, solarVar);
+          AppState.sources.solar.efficiency = Math.round((solarVar / 3) * 100);
+
+          // Wind variation
+          const windVar = 1.2 + Math.sin(Date.now() / 7000 + 2) * 0.3;
+          AppState.sources.wind.power = Math.max(0, windVar);
+          AppState.sources.wind.efficiency = Math.round((windVar / 1.5) * 100);
+
+          this.renderDashboard();
+        }, 2000);
+      },
+
+      toggleProfileMenu() {
+        const menu = document.getElementById('profileMenu');
+        menu.classList.toggle('show');
+      },
+
+      closeProfileMenu() {
+        const menu = document.getElementById('profileMenu');
+        menu.classList.remove('show');
+      },
+
+      saveProfile() {
+        const name = document.getElementById('profileName').value;
+        const password = document.getElementById('profilePassword').value;
+        localStorage.setItem('userName', name);
+        if (password) {
+          localStorage.setItem('userPassword', password);
+        }
+        this.closeProfileMenu();
+        alert('Profil sauvegardé avec succès!');
+      },
+
+      initPriorityDragDrop() {
+        const priorityList = document.getElementById('priorityList');
+        if (!priorityList) return;
+
+        const items = priorityList.querySelectorAll('.priority-item');
+        let draggedItem = null;
+
+        items.forEach(item => {
+          item.addEventListener('dragstart', (e) => {
+            draggedItem = item;
+            item.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+          });
+
+          item.addEventListener('dragend', (e) => {
+            item.classList.remove('dragging');
+            items.forEach(i => i.classList.remove('drag-over'));
+            draggedItem = null;
+          });
+
+          item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            if (item !== draggedItem) {
+              item.classList.add('drag-over');
+            }
+          });
+
+          item.addEventListener('dragleave', (e) => {
+            item.classList.remove('drag-over');
+          });
+
+          item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (item !== draggedItem) {
+              const allItems = Array.from(priorityList.querySelectorAll('.priority-item'));
+              const draggedIndex = allItems.indexOf(draggedItem);
+              const targetIndex = allItems.indexOf(item);
+
+              if (draggedIndex < targetIndex) {
+                item.parentNode.insertBefore(draggedItem, item.nextSibling);
+              } else {
+                item.parentNode.insertBefore(draggedItem, item);
+              }
+
+              this.updatePriorityBadges();
+              item.classList.remove('drag-over');
+            }
+          });
+        });
+      },
+
+      updatePriorityBadges() {
+        const priorityList = document.getElementById('priorityList');
+        if (!priorityList) return;
+
+        const items = priorityList.querySelectorAll('.priority-item');
+        items.forEach((item, index) => {
+          const badge = item.querySelector('.priority-badge');
+          badge.textContent = (index + 1);
+        });
+      },
+
+      toggleTheme() {
+        // Fonction vide - le thème sombre n'est plus disponible
+        console.log('Thème non disponible');
+      },
+
+      toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        } else {
+          document.exitFullscreen();
+        }
+      }
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      app.init();
+      
+      // Fermer le menu profil quand on clique ailleurs
+      document.addEventListener('click', (e) => {
+        const profileBtn = document.querySelector('.profile-btn');
+        const profileMenu = document.getElementById('profileMenu');
+        if (profileBtn && profileMenu && !profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+          profileMenu.classList.remove('show');
+        }
+      });
+    });
+  </script>
+
+
+</body>
+</html>
